@@ -1,0 +1,805 @@
+{
+	"info": {
+		"_postman_id": "19469112-8adeeb79-cc2b-45a0-8443-dfb661812804",
+		"name": "PetStore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuário fluxo feliz",
+			"item": [
+				{
+					"name": "01. Criar usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Cadastro feito com sucesso\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const res = pm.response.json();\r",
+									"    pm.expect(res.code).to.eql(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"username\", pm.variables.get(\"username\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "c6e70f35-1fbd-4ae0-821f-f0449dcc22dc"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"user_id\", Math.floor(Math.random() * 100) + 1);\r",
+									"pm.variables.set(\"userStatus\", Math.floor(Math.random() * 100) + 1);\r",
+									"\r",
+									"// --- Definição das listas de nomes ---\r",
+									"const firstNames = [\r",
+									"    \"Ana\", \"Bruno\", \"Carla\", \"Daniel\", \"Eduarda\", \"Felipe\", \"Gabriela\", \"Hugo\",\r",
+									"    \"Isabela\", \"João\", \"Karen\", \"Lucas\", \"Mariana\", \"Nicolas\", \"Olívia\", \"Pedro\",\r",
+									"    \"Renata\", \"Sergio\", \"Tatiana\", \"Uriel\", \"Vitoria\", \"Wagner\", \"Xenia\", \"Yasmin\", \"Zeca\"\r",
+									"];\r",
+									"\r",
+									"const lastNames = [\r",
+									"    \"Silva\", \"Santos\", \"Oliveira\", \"Souza\", \"Lima\", \"Costa\", \"Rodrigues\", \"Almeida\",\r",
+									"    \"Pereira\", \"Ferreira\", \"Carvalho\", \"Martins\", \"Monteiro\", \"Moraes\", \"Nunes\", \"Pires\",\r",
+									"    \"Ribeiro\", \"Rocha\", \"Gonçalves\", \"Dias\", \"Fernandes\", \"Gomes\", \"Lopes\", \"Mendes\", \"Castro\"\r",
+									"];\r",
+									"// --- Fim da definição das listas de nomes ---\r",
+									"\r",
+									"\r",
+									"// Função para selecionar um item aleatório de um array\r",
+									"function getRandomItem(arr) {\r",
+									"    const randomIndex = Math.floor(Math.random() * arr.length);\r",
+									"    return arr[randomIndex];\r",
+									"}\r",
+									"\r",
+									"// Gerar firstName aleatório\r",
+									"const randomFirstName = getRandomItem(firstNames);\r",
+									"pm.variables.set(\"firstName\", randomFirstName);\r",
+									"\r",
+									"// Gerar lastName aleatório\r",
+									"const randomLastName = getRandomItem(lastNames);\r",
+									"pm.variables.set(\"lastName\", randomLastName);\r",
+									"\r",
+									"const usernameSuffix = Math.floor(Math.random() * 1000000); // Sufixo numérico para unicidade\r",
+									"const generatedUsername = (randomFirstName.toLowerCase() + randomLastName.toLowerCase() + usernameSuffix).replace(/\\s/g, '');\r",
+									"\r",
+									"pm.variables.set(\"username\", \"testeqa1\");\r",
+									"\r",
+									"// --- Fim do ajuste para o username ---\r",
+									"\r",
+									"\r",
+									"// Logs para verificar os valores gerados\r",
+									"console.log(\"Primeiro nome gerado:\", pm.variables.get(\"firstName\"));\r",
+									"console.log(\"Sobrenome gerado:\", pm.variables.get(\"lastName\"));\r",
+									"console.log(\"Email gerado:\", pm.variables.get(\"email\")); \r",
+									"\r",
+									"\r",
+									"// --- Definição das outras variáveis (email, password, phone) ---\r",
+									"// Usando as variáveis firstName e lastName recém-geradas\r",
+									"pm.variables.set(\"email\", pm.variables.get(\"firstName\").toLowerCase() + \".\" + pm.variables.get(\"lastName\").toLowerCase() + usernameSuffix + \"@mail.com\");\r",
+									"pm.variables.set(\"password\", Math.floor(100000 + Math.random() * 900000).toString());\r",
+									"pm.variables.set(\"phone\", \"8399\" + Math.floor(100000 + Math.random() * 900000).toString());\r",
+									"// --- Fim da definição das outras variáveis ---\r",
+									"\r",
+									"console.log(\"Username gerado (para POST e GET):\", pm.variables.get(\"username\")); \r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "72948173-e313-406b-af16-2688bfced327"
+							}
+						}
+					],
+					"id": "19469112-1ce221e6-b21e-46b1-ba03-82614044e089",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{user_id}},\n  \"username\": \"{{username}}\",\n  \"firstName\": \"{{firstName}}\",\n  \"lastName\": \"{{lastName}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"phone\": \"{{phone}}\",\n  \"userStatus\": {{userStatus}}\n}\n",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "This can only be done by the logged in user."
+					},
+					"response": [
+						{
+							"id": "19469112-0d51a03d-a1be-4c3b-a475-a1fb6ebe5be7",
+							"name": "successful operation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 43963427,\n  \"username\": \"ut reprehenderi\",\n  \"firstName\": \"amet\",\n  \"lastName\": \"adipisicing cillum velit\",\n  \"email\": \"mollit magna\",\n  \"password\": \"deserunt sunt ullamco in\",\n  \"phone\": \"amet Excepteur nulla sunt\",\n  \"userStatus\": 36757777\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "02. Pesquisar usuário pelo nome",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Buscando username:\", pm.variables.get(\"username\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "5a27db2f-9c64-4f7d-b5e7-efbeb93b4c09"
+							}
+						}
+					],
+					"id": "19469112-8f8f9063-df76-4bf4-b303-886474c88ecd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{username}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{username}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "19469112-8c8834bd-0524-4042-a648-b2adb8a87fb0",
+							"name": "successful operation",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"id\": 43963427,\n  \"username\": \"ut reprehenderi\",\n  \"firstName\": \"amet\",\n  \"lastName\": \"adipisicing cillum velit\",\n  \"email\": \"mollit magna\",\n  \"password\": \"deserunt sunt ullamco in\",\n  \"phone\": \"amet Excepteur nulla sunt\",\n  \"userStatus\": 36757777\n}"
+						},
+						{
+							"id": "19469112-25a938a4-ae8c-4bf4-add1-9108a3c6d0cb",
+							"name": "Invalid username supplied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						},
+						{
+							"id": "19469112-a58aed21-89a2-4594-b12f-88f994220b86",
+							"name": "User not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "03. Alterar dados do usuário",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "41cdf99e-a4aa-4bf0-b421-64f4c38d1350",
+								"exec": [
+									"const firstNames = [\r",
+									"    \"Alice\", \"Bento\", \"Clara\", \"Davi\", \"Eva\", \"Fabio\", \"Gisele\", \"Heitor\",\r",
+									"    \"Igor\", \"Julia\", \"Kaua\", \"Lara\", \"Miguel\", \"Nina\", \"Otavio\", \"Paula\",\r",
+									"    \"Quiteria\", \"Rafael\", \"Sofia\", \"Thiago\", \"Ursula\", \"Vitor\", \"Wendell\", \"Yago\", \"Zara\"\r",
+									"];\r",
+									"\r",
+									"const lastNames = [\r",
+									"    \"Santos\", \"Pereira\", \"Alves\", \"Fernandes\", \"Gomes\", \"Silva\", \"Costa\", \"Lima\",\r",
+									"    \"Carvalho\", \"Rodrigues\", \"Martins\", \"Rocha\", \"Ribeiro\", \"Dias\", \"Ferreira\", \"Moreira\",\r",
+									"    \"Nascimento\", \"Oliveira\", \"Souza\", \"Barbosa\", \"Cunha\", \"Freitas\", \"Pinto\", \"Correia\", \"Castro\"\r",
+									"];\r",
+									"\r",
+									"// Função para selecionar um item aleatório de um array\r",
+									"function getRandomItem(arr) {\r",
+									"    const randomIndex = Math.floor(Math.random() * arr.length);\r",
+									"    return arr[randomIndex];\r",
+									"}\r",
+									"// --- Fim das listas e função de ajuda ---\r",
+									"\r",
+									"// 1. Gerar novos nomes aleatórios para a alteração\r",
+									"const newFirstName = getRandomItem(firstNames);\r",
+									"const newLastName = getRandomItem(lastNames);\r",
+									"const newEmailSuffix = Math.floor(Math.random() * 10000); // Sufixo para garantir unicidade do email se o nome se repetir\r",
+									"\r",
+									"pm.variables.set(\"user_id\", 81); // <-- Use o ID real de testeqa\r",
+									"\r",
+									"// 2. Definir as variáveis para uso no corpo da requisição PUT\r",
+									"pm.variables.set(\"firstNameAlterado\", newFirstName);\r",
+									"pm.variables.set(\"lastNameAlterado\", newLastName);\r",
+									"\r",
+									"// O username no PUT deve ser o DO USUÁRIO QUE VOCÊ QUER ALTERAR.\r",
+									"// Pelo que entendemos, \"testeqa\" é o username fixo que você consegue buscar.\r",
+									"pm.variables.set(\"usernameAlterado\", \"fuiAlterado\"); // <-- Mantenha o username do usuário que existe e você quer ALTERAR\r",
+									"\r",
+									"// Crie o novo email baseado nos novos nomes, com um sufixo para garantir unicidade\r",
+									"pm.variables.set(\"emailAlterado\", newFirstName.toLowerCase() + \".\" + newLastName.toLowerCase() + newEmailSuffix + \"@mail.com\");\r",
+									"\r",
+									"// Gerar uma nova senha e telefone se quiser alterar também\r",
+									"pm.variables.set(\"passwordAlterado\", Math.floor(100000 + Math.random() * 900000).toString());\r",
+									"pm.variables.set(\"phoneAlterado\", \"8399\" + Math.floor(100000 + Math.random() * 900000).toString());\r",
+									"pm.variables.set(\"userStatusAlterado\", Math.floor(Math.random() * 100) + 1); // Novo userStatus\r",
+									"\r",
+									"// Logs para verificar o que está sendo gerado\r",
+									"console.log(\"Username a ser alterado (fixo):\", pm.variables.get(\"usernameAlterado\"));\r",
+									"console.log(\"Novo Primeiro Nome:\", pm.variables.get(\"firstNameAlterado\"));\r",
+									"console.log(\"Novo Sobrenome:\", pm.variables.get(\"lastNameAlterado\"));\r",
+									"console.log(\"Novo Email:\", pm.variables.get(\"emailAlterado\"));\r",
+									"console.log(\"Nova Senha:\", pm.variables.get(\"passwordAlterado\"));\r",
+									"console.log(\"Novo Telefone:\", pm.variables.get(\"phoneAlterado\"));\r",
+									"console.log(\"Novo User Status:\", pm.variables.get(\"userStatusAlterado\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "30e8629a-1e0e-41a7-9186-769cbace8e14",
+								"exec": [
+									"pm.test(\"Alteração feita com sucesso\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const res = pm.response.json();\r",
+									"    pm.expect(res.code).to.eql(200);\r",
+									"});\r",
+									"pm.collectionVariables.set(\"usernameAlterado\", pm.variables.get(\"usernameAlterado\"));\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "19469112-ff5211be-59f0-4dc3-8476-daf70e168a8d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{user_id}},\n  \"username\": \"{{usernameAlterado}}\",\n  \"firstName\": \"{{firstNameAlterado}}\",\n  \"lastName\": \"{{lastNameAlterado}}\",\n  \"email\": \"{{emailAlterado}}\",  \n  \"password\": \"{{passwordAlterado}}\",\n  \"phone\": \"{{phoneAlterado}}\",\n  \"userStatus\": \"{{userStatusAlterado}}\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/{{username}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{username}}"
+							]
+						},
+						"description": "This can only be done by the logged in user."
+					},
+					"response": [
+						{
+							"id": "19469112-f92a3171-736f-4e5a-990f-f0061201966d",
+							"name": "Invalid user supplied",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 43963427,\n  \"username\": \"ut reprehenderi\",\n  \"firstName\": \"amet\",\n  \"lastName\": \"adipisicing cillum velit\",\n  \"email\": \"mollit magna\",\n  \"password\": \"deserunt sunt ullamco in\",\n  \"phone\": \"amet Excepteur nulla sunt\",\n  \"userStatus\": 36757777\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						},
+						{
+							"id": "19469112-8ffcb197-324f-46d4-95c3-d561f7d91eb0",
+							"name": "User not found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 43963427,\n  \"username\": \"ut reprehenderi\",\n  \"firstName\": \"amet\",\n  \"lastName\": \"adipisicing cillum velit\",\n  \"email\": \"mollit magna\",\n  \"password\": \"deserunt sunt ullamco in\",\n  \"phone\": \"amet Excepteur nulla sunt\",\n  \"userStatus\": 36757777\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "04. Pesquisar usuário",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Buscando usernameAlterado:\", pm.variables.get(\"usernameAlterado\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"id": "ed97c31f-75dd-48e1-bafa-9666134b1857"
+							}
+						}
+					],
+					"id": "19469112-bb426564-c2e6-4c3e-894d-cd929233ee3c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{usernameAlterado}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{usernameAlterado}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "19469112-d2d1b441-44e9-449a-b3f2-c8eee4141388",
+							"name": "successful operation",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n  \"id\": 43963427,\n  \"username\": \"ut reprehenderi\",\n  \"firstName\": \"amet\",\n  \"lastName\": \"adipisicing cillum velit\",\n  \"email\": \"mollit magna\",\n  \"password\": \"deserunt sunt ullamco in\",\n  \"phone\": \"amet Excepteur nulla sunt\",\n  \"userStatus\": 36757777\n}"
+						},
+						{
+							"id": "19469112-aab08689-48fc-4e64-913c-14b68943c8cf",
+							"name": "Invalid username supplied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						},
+						{
+							"id": "19469112-16be3c15-aff7-42b3-b80e-2d0e513f73f2",
+							"name": "User not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Deletar usuário",
+					"id": "19469112-453c033f-cae6-4fa4-b962-9d0f8cd4ea67",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{usernameAlterado}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{usernameAlterado}}"
+							]
+						},
+						"description": "This can only be done by the logged in user."
+					},
+					"response": [
+						{
+							"id": "19469112-517831c3-6a1c-42ac-a3b7-10ee72410d7e",
+							"name": "Invalid username supplied",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						},
+						{
+							"id": "19469112-5896bc4d-59e8-41ab-8349-817a71869a0a",
+							"name": "User not found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/:username",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":username"
+									],
+									"variable": [
+										{
+											"key": "username"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"responseTime": null,
+							"body": ""
+						}
+					]
+				}
+			],
+			"id": "19469112-168f4817-2e5d-4790-b3bf-1408ddc41c64"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				],
+				"id": "d3aadea4-2dbf-4047-91b1-214fb407b721"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				],
+				"id": "e4e27731-72a6-4e29-ac28-8fb190dfab03"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "Maria",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "firstNameAlterado",
+			"value": "",
+			"disabled": true
+		}
+	]
+}
